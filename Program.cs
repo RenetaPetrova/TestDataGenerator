@@ -1,8 +1,11 @@
 ﻿using Bogus;
 using CsvHelper;
 using CsvHelper.Configuration;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Formats.Asn1;
 using System.Globalization;
 using System.IO;
 
@@ -10,13 +13,13 @@ namespace TestDataGenerator
 {
     public class User
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Password { get; set; }
-        public string Address { get; set; }
-        public string BirthDate { get; set; }
+        public string ?FirstName { get; set; }
+        public string ?LastName { get; set; }
+        public string ?Email { get; set; }
+        public string ?PhoneNumber { get; set; }
+        public string ?Password { get; set; }
+        public string ?Address { get; set; }
+        public string ?BirthDate { get; set; }
     }
 
     class Program
@@ -25,8 +28,19 @@ namespace TestDataGenerator
         {
             int recordCount = GetRecordCount();
             var testDataList = GenerateTestUsers(recordCount);
-            ExportToCsv(testDataList, "test_users.csv");
-            Console.WriteLine($"The test data was successfully generated and saved with {recordCount} records in: test_users.csv");
+
+            string fileType = GetFileType();
+
+            if (fileType == "csv")
+            {
+                ExportToCsv(testDataList, "test_users.csv");
+                Console.WriteLine($"The test data was successfully generated and saved with {recordCount} records in: test_users.csv");
+            }
+            else if (fileType == "excel")
+            {
+                ExportToExcel(testDataList, "test_users.xlsx");
+                Console.WriteLine($"The test data was successfully generated and saved with {recordCount} records in: test_users.xlsx");
+            }
         }
 
         static List<User> GenerateTestUsers(int count)
@@ -51,6 +65,18 @@ namespace TestDataGenerator
             }
         }
 
+        static void ExportToExcel(List<User> data, string filePath)
+        {
+            ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Users");
+                worksheet.Cells["A1"].LoadFromCollection(data, true);
+                package.SaveAs(new FileInfo(filePath));
+            }
+        }
+
         static int GetRecordCount()
         {
             Console.Write("Enter the number of records to generate: ");
@@ -63,6 +89,20 @@ namespace TestDataGenerator
                     return count;
                 }
                 Console.Write($"Invalid input. Please enter a positive number (1-{maxLimit}): ");
+            }
+        }
+
+        static string GetFileType()
+        {
+            Console.Write("Enter the file type to generate (csv/excel): ");
+            while (true)
+            {
+                string input = Console.ReadLine().ToLower();
+                if (input == "csv" || input == "excel")
+                {
+                    return input;
+                }
+                Console.Write("Invalid input. Please enter 'csv' or 'excel': ");
             }
         }
     }
