@@ -1,44 +1,79 @@
-# TestDataGenerator
-A simple C# console application that generates random test user data and exports it to a CSV file using the `Bogus` and `CsvHelper` libraries.
+# Test Data Generator
+
+This project generates test user data and exports it to CSV or Excel files.
 
 ## Features
-- Generates realistic user data, including:
-  - First name
-  - Last name
+
+- Generates random user data including:
+  - First Name
+  - Last Name
   - Email
-  - Phone number
-  - Password
+  - Phone Number
   - Address
-  - Birth date
-- Exports the generated data to a CSV file.
-- Validates user input for record count.
-- Customizable maximum record limit.
+  - Password
+  - Birth Date
+- Supports export to:
+  - CSV (`.csv`)
+  - Excel (`.xlsx`)
 
-## Prerequisites
-Make sure you have the following installed before running the project:
+## Requirements
 
-- [.NET SDK](https://dotnet.microsoft.com/download) (for running the application)
-- [Git](https://git-scm.com/downloads) (for cloning the repository)
+Ensure the following NuGet packages are installed:
+- [Bogus](https://www.nuget.org/packages/Bogus) - For generating fake data
+- [CsvHelper](https://www.nuget.org/packages/CsvHelper) - For exporting to CSV
+- [EPPlus](https://www.nuget.org/packages/EPPlus) - For exporting to Excel
 
 ## Installation
+
 1. Clone the repository:
    ```bash
    git clone https://github.com/yourusername/TestDataGenerator.git
+   ```
 
-2. Navigate to the project directory:
+2. Navigate to the project directory: 
+   ```bash
    cd TestDataGenerator
+   ```
 
-3. Run the application:
+3. Install required dependencies:
+   ```bash
+   dotnet add package Bogus
+   dotnet add package CsvHelper
+   dotnet add package EPPlus --version 6.0.8
+   ```
+
+4. Run the application: 
+   ```bash
    dotnet run
+   ```
 
 ## Example Output
-Enter the number of records to generate: 100 
+
+### CSV Output
+```
+Enter the number of records to generate: 100
+Enter the file format (csv/excel): csv
 The test data was successfully generated and saved with 100 records in: test_users.csv
+```
+
+### Excel Output
+```
+Enter the number of records to generate: 50
+Enter the file format (csv/excel): excel
+The test data was successfully generated and saved with 50 records in: test_users.xlsx
+```
 
 ## Usage
-After running the application, you'll be prompted to enter the number of records to generate.  
-The generated test data will be saved in a file named `test_users.csv` in the project directory.
+
+After running the application:
+1. Enter the number of records to generate
+2. Choose the file format (CSV or Excel)
+3. The data will be saved in the project directory
 
 ## Contributing
-Contributions are welcome!  
-If you'd like to contribute, please fork the repository and submit a pull request.
+
+Contributions are welcome! If you'd like to contribute, please fork the repository and submit a pull request.
+
+## License
+
+This project is licensed under the MIT License.
